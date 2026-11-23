@@ -19,6 +19,6 @@ jobs:
       - uses: actions/setup-node@v6.4.0
         with:
           node-version: 24
-      - run: pnpm install --filter "@open-design/tools-dev..." --frozen-lockfile --ignore-scripts
+      - run: pnpm install --filter "@open-design/tools-dev..." --filter "@open-design/metatool..." --frozen-lockfile --ignore-scripts
       - run: pnpm --filter "@open-design/tools-dev..." --if-present run build
       - run: pnpm --filter @open-design/tools-dev test
