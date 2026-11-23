@@ -1,0 +1,32 @@
+name: Recheck OpenDesign 9604 Web shard
+
+on:
+  push:
+    branches: [codex/verify-od-9604-web-shard]
+
+permissions:
+  contents: read
+
+jobs:
+  web-shard:
+    if: github.repository == 'XSY-28/open-design'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          ref: 55dcc681ecf6e705fd9155217757fd628c03b2cc
+          persist-credentials: false
+      - name: Confirm the exact PR source
+        run: test "$(git rev-parse HEAD)" = 55dcc681ecf6e705fd9155217757fd628c03b2cc
+      - uses: ./.github/actions/configure-ci-parallelism
+      - uses: ./.github/actions/setup-workspace
+        with:
+          node-version: '24.22.3'
+          pnpm-version: '10.33.2'
+          postinstall-intent: ci-web
+          runner-labels: '["ubuntu-24.04"]'
+      - name: Prebuild web sidecar declarations
+        run: pnpm --filter @open-design/web build:sidecar
+      - name: Web workspace tests (2/2)
+        run: pnpm --filter @open-design/web exec vitest run -c vitest.config.ts --maxWorkers=2 --shard=2/2
