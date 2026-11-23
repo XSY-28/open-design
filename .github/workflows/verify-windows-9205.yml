@@ -1,4 +1,4 @@
-name: OpenDesign 9205 Windows verification
+name: OpenDesign 9205 Windows baseline
 on:
   push:
     branches: [codex/ci-open-design-9205-windows]
@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6.0.2
         with:
-          ref: dc357e2ebd8c2ee231425de5b5cc58d6eb54edb1
+          ref: 5fdcc3db1e31bd4fa70f673041b78e87977507c3
           persist-credentials: false
       - uses: pnpm/action-setup@v6.0.8
         with:
@@ -21,4 +21,4 @@ jobs:
           node-version: 24
       - run: pnpm install --filter "@open-design/tools-dev..." --filter "@open-design/metatool..." --frozen-lockfile --ignore-scripts
       - run: pnpm --filter "@open-design/tools-dev..." --if-present run build
-      - run: pnpm --filter @open-design/tools-dev test
+      - run: pnpm --filter @open-design/tools-dev exec node --import tsx --test tests/vela-runtime.test.ts
