@@ -1,0 +1,24 @@
+name: OpenDesign 9205 Windows verification
+on:
+  push:
+    branches: [codex/ci-open-design-9205-windows]
+permissions:
+  contents: read
+jobs:
+  tools-dev:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          ref: dc357e2ebd8c2ee231425de5b5cc58d6eb54edb1
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6.0.8
+        with:
+          version: 10.33.2
+      - uses: actions/setup-node@v6.4.0
+        with:
+          node-version: 24
+      - run: pnpm install --filter "@open-design/tools-dev..." --frozen-lockfile --ignore-scripts
+      - run: pnpm --filter "@open-design/tools-dev..." --if-present run build
+      - run: pnpm --filter @open-design/tools-dev test
